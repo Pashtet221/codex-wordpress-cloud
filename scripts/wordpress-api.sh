@@ -9,12 +9,12 @@ pages) curl_api "$API/posts?post_type=page&per_page=100";;
 posts) curl_api "$API/posts?post_type=post&per_page=100";;
 find) curl_api --get --data-urlencode "search=${2:-}" "$API/posts";;
 get) curl_api "$API/posts/$2";;
-acf)get) ;;
+create) curl_api -X POST -H "Content-Type: application/json" --data-binary @"$2" "$API/posts";;
 acf) curl_api "$API/posts/$2/acf";;
 update) curl_api -X PATCH -H "Content-Type: application/json" --data-binary @"$3" "$API/posts/$2";;
 update-acf) curl_api -X PATCH -H "Content-Type: application/json" --data-binary @"$3" "$API/posts/$2/acf";;
 scan-links) curl_api -X POST "$API/links/scan";;
 replace-links) curl_api -X POST -H "Content-Type: application/json" --data-binary @"$2" "$API/links/replace";;
 audit) curl_api "$API/audit";;
-*) echo "health pages posts find get acf update update-acf scan-links replace-links audit";;
+*) echo "health pages posts find get create acf update update-acf scan-links replace-links audit";;
 esac
