@@ -12,8 +12,9 @@
 
 Используй только `scripts/wp`; перед любым изменением сначала читай запись командой `get` или `acf`, после изменения проверяй результат повторным чтением.
 
-• `scripts/wp wp-plugins` — показать записи типа `wp-plugins`.
+• `scripts/wp wp-plugins` — показать записи раздела плагинов через REST-базу `plugin` (URL сайта: `/wp-plugins/...`).
 • `scripts/wp plugins` — короткий алиас для `wp-plugins`.
+• `scripts/wp plugin-categories` — показать существующие категории плагинов (`plugin_category`).
 • `scripts/wp find-wp-plugins "название или слаг"` — найти запись-плагин внутри типа `wp-plugins`.
 • `scripts/wp get <id>` — прочитать запись перед изменением.
 • `scripts/wp acf <id>` — прочитать ACF-поля записи перед изменением ACF.
