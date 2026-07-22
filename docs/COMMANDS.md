@@ -4,22 +4,24 @@
 • Покажи её ACF.
 • Измени hero_title.
 • Создай страницу.
+• Покажи записи типа wp-plugins.
+• Создай запись типа wp-plugins.
+• Отредактируй запись типа wp-plugins.
 • Просканируй ссылки.
 • Замени ссылки.
 • Покажи аудит изменений.
 
-## Работа с записями `wp-plugins`
+Команды вручную:
 
-Используй только `scripts/wp`; перед любым изменением сначала читай запись командой `get` или `acf`, после изменения проверяй результат повторным чтением.
+```bash
+# Получить все записи типа wp-plugins
+scripts/wp wp-plugins
 
-• `scripts/wp wp-plugins` — показать записи раздела плагинов через REST-базу `plugin` (URL сайта: `/wp-plugins/...`).
-• `scripts/wp plugins` — короткий алиас для `wp-plugins`.
-• `scripts/wp plugin-categories` — показать существующие категории плагинов (`plugin_category`).
-• `scripts/wp find-wp-plugins "название или слаг"` — найти запись-плагин внутри типа `wp-plugins`.
-• `scripts/wp get <id>` — прочитать запись перед изменением.
-• `scripts/wp acf <id>` — прочитать ACF-поля записи перед изменением ACF.
-• `scripts/wp update <id> <json-файл>` — обновить данные записи после чтения объекта.
-• `scripts/wp update-acf <id> <json-файл>` — обновить ACF-поля после чтения ACF.
-• `scripts/wp create <json-файл>` — добавить новый плагин как запись; в JSON указывай `post_type: "wp-plugins"`.
-• `scripts/wp list-type <post_type> [per_page]` — универсальный список для других типов записей, если появятся новые типы плагинов.
-• `scripts/wp find "строка" <post_type>` — универсальный поиск внутри конкретного типа записей.
+# Создать запись типа wp-plugins
+scripts/wp create-wp-plugin examples/create-wp-plugin.json
+
+# Изменить запись типа wp-plugins, где 123 — ID записи
+scripts/wp update-wp-plugin 123 examples/update-wp-plugin.json
+```
+
+Важно: WordPress-плагин Codex Bridge на самом сайте должен разрешать post type `wp-plugins` в своём списке допустимых типов записей. Этот архив содержит клиентские команды, а не PHP-код серверного плагина.
