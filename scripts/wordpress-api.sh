@@ -19,13 +19,24 @@ case "${1:-help}" in
     curl_api "$API/posts?post_type=post&per_page=100"
     ;;
   wp-plugins)
-    curl_api "$API/posts?post_type=wp-plugins&per_page=100"
+    bridge_response="$(mktemp)"
+    if curl_api "$API/posts?post_type=wp-plugins&per_page=100" >"$bridge_response"; then
+      cat "$bridge_response"
+      rm -f "$bridge_response"
+      exit 0
+    fi
+    rm -f "$bridge_response"
+    echo "codex-bridge wp-plugins is unavailable; falling back to WordPress REST post type plugin" >&2
+    curl_api "${WORDPRESS_URL%/}/wp-json/wp/v2/plugin?per_page=100"
     ;;
   find)
     curl_api --get --data-urlencode "search=${2:-}" "$API/posts"
     ;;
   get)
     curl_api "$API/posts/$2"
+    ;;
+  get-wp-plugin)
+    curl_api "${WORDPRESS_URL%/}/wp-json/wp/v2/plugin/$2"
     ;;
   create)
     curl_api -X POST -H "Content-Type: application/json" --data-binary @"$2" "$API/posts"
@@ -40,7 +51,15 @@ case "${1:-help}" in
     curl_api -X PATCH -H "Content-Type: application/json" --data-binary @"$3" "$API/posts/$2"
     ;;
   update-wp-plugin)
-    curl_api -X PATCH -H "Content-Type: application/json" --data-binary @"$3" "$API/posts/$2"
+    bridge_response="$(mktemp)"
+    if curl_api -X PATCH -H "Content-Type: application/json" --data-binary @"$3" "$API/posts/$2" >"$bridge_response"; then
+      cat "$bridge_response"
+      rm -f "$bridge_response"
+      exit 0
+    fi
+    rm -f "$bridge_response"
+    echo "codex-bridge wp-plugins update is unavailable; falling back to WordPress REST post type plugin" >&2
+    curl_api -X PATCH -H "Content-Type: application/json" --data-binary @"$3" "${WORDPRESS_URL%/}/wp-json/wp/v2/plugin/$2"
     ;;
   update-acf)
     curl_api -X PATCH -H "Content-Type: application/json" --data-binary @"$3" "$API/posts/$2/acf"
@@ -55,6 +74,6 @@ case "${1:-help}" in
     curl_api "$API/audit"
     ;;
   *)
-    echo "health pages posts wp-plugins find get create create-wp-plugin acf update update-wp-plugin update-acf scan-links replace-links audit"
+    echo "health pages posts wp-plugins find get get-wp-plugin create create-wp-plugin acf update update-wp-plugin update-acf scan-links replace-links audit"
     ;;
 esac
